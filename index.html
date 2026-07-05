@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DME Synthesis Review</title>
+<style>
+  :root {
+    --bg: #eef1f4; --panel: #ffffff; --ink: #141a21; --muted: #5b6773;
+    --faint: #8894a1; --line: #dbe1e7; --accent: #0e7d8f; --accent-soft: #d3ebef;
+    --shadow: 0 1px 2px rgba(20,26,33,.05), 0 8px 24px rgba(20,26,33,.06);
+    --sans: "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --mono: "SFMono-Regular", "JetBrains Mono", Consolas, ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0e1319; --panel: #171e26; --ink: #e7edf2; --muted: #9aa7b3;
+      --faint: #6f7d8a; --line: #29333d; --accent: #3fbecf; --accent-soft: #123840;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35); }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+    line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: clamp(36px,7vw,80px) clamp(18px,4vw,32px) 80px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: .74rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--accent); display: inline-block; }
+  h1 { margin: 16px 0 0; font-weight: 800; letter-spacing: -.02em; font-size: clamp(1.9rem,5vw,2.7rem); line-height: 1.1; }
+  h1 .em { color: var(--accent); }
+  .lede { margin: 16px 0 34px; color: var(--muted); font-size: 1.05rem; max-width: 60ch; }
+  .cards { display: grid; gap: 16px; }
+  a.card { display: block; text-decoration: none; color: inherit; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow);
+    transition: transform .15s ease, border-color .15s ease; }
+  a.card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  a.card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .tag { display: inline-block; font-family: var(--mono); font-size: .72rem; font-weight: 600;
+    letter-spacing: .04em; color: var(--accent); background: var(--accent-soft); padding: 3px 9px;
+    border-radius: 6px; margin-bottom: 10px; }
+  a.card h2 { margin: 0 0 6px; font-size: 1.2rem; font-weight: 750; }
+  a.card p { margin: 0; color: var(--muted); font-size: .92rem; }
+  a.card .go { margin-top: 12px; font-size: .85rem; font-weight: 650; color: var(--accent); }
+  footer { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line);
+    font-size: .82rem; color: var(--faint); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  @media (prefers-reduced-motion: reduce) { a.card { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Syngas → Dimethyl Ether</span>
+  <h1>合成ガスからの<span class="em">DME合成</span> 資料集</h1>
+  <p class="lede">合成ガス（CO + H₂）からのDME合成に関する技術総説と、主要プレイヤー・ライセンサーのプロセス比較をまとめた自己完結型HTML資料。</p>
+
+  <div class="cards">
+    <a class="card" href="dme_synthesis_review.html">
+      <span class="tag">01 · 技術総説</span>
+      <h2>DME合成の技術総説とプロセス比較</h2>
+      <p>基礎反応・熱化学・2ルート（間接／直接）比較と、JFE・KOGAS・Haldor Topsøe・Air Products 他の各社プロセス比較表。</p>
+      <div class="go">開く →</div>
+    </a>
+    <a class="card" href="dme_review_matrix.html">
+      <span class="tag">02 · 文献マトリクス</span>
+      <h2>主要総説8件のレビュー・マトリクス</h2>
+      <p>各総説が4社のプロセスをどの程度取り上げているかを ◎/○/△ で整理。原著（DOI）へのリンク付き。</p>
+      <div class="go">開く →</div>
+    </a>
+  </div>
+
+  <footer>
+    Source: <a href="https://github.com/broadtube/dme-synthesis-review">github.com/broadtube/dme-synthesis-review</a>
+  </footer>
+</div>
+</body>
+</html>
