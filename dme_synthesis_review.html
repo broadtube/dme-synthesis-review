@@ -1,0 +1,442 @@
+<title>合成ガスからのDME合成 技術総説</title>
+<style>
+  :root {
+    --bg: #eef1f4;
+    --panel: #ffffff;
+    --panel-2: #f5f7f9;
+    --ink: #141a21;
+    --muted: #5b6773;
+    --faint: #8894a1;
+    --line: #dbe1e7;
+    --line-strong: #c3ccd4;
+    --accent: #0e7d8f;
+    --accent-soft: #d3ebef;
+    --heat: #b5652a;
+    --heat-soft: #f2e2d3;
+    --direct-fg: #0e7d8f;
+    --direct-bg: #d9edf0;
+    --indirect-fg: #7a5a12;
+    --indirect-bg: #f0e6cf;
+    --shadow: 0 1px 2px rgba(20,26,33,.05), 0 8px 24px rgba(20,26,33,.06);
+    --sans: "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --mono: "SFMono-Regular", "JetBrains Mono", Consolas, "Roboto Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1319;
+      --panel: #171e26;
+      --panel-2: #1c242d;
+      --ink: #e7edf2;
+      --muted: #9aa7b3;
+      --faint: #6f7d8a;
+      --line: #29333d;
+      --line-strong: #38444f;
+      --accent: #3fbecf;
+      --accent-soft: #123840;
+      --heat: #dd9459;
+      --heat-soft: #3a2a1a;
+      --direct-fg: #57c6d6;
+      --direct-bg: #123840;
+      --indirect-fg: #e0b968;
+      --indirect-bg: #362c17;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #eef1f4; --panel: #ffffff; --panel-2: #f5f7f9; --ink: #141a21;
+    --muted: #5b6773; --faint: #8894a1; --line: #dbe1e7; --line-strong: #c3ccd4;
+    --accent: #0e7d8f; --accent-soft: #d3ebef; --heat: #b5652a; --heat-soft: #f2e2d3;
+    --direct-fg: #0e7d8f; --direct-bg: #d9edf0; --indirect-fg: #7a5a12; --indirect-bg: #f0e6cf;
+    --shadow: 0 1px 2px rgba(20,26,33,.05), 0 8px 24px rgba(20,26,33,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1319; --panel: #171e26; --panel-2: #1c242d; --ink: #e7edf2;
+    --muted: #9aa7b3; --faint: #6f7d8a; --line: #29333d; --line-strong: #38444f;
+    --accent: #3fbecf; --accent-soft: #123840; --heat: #dd9459; --heat-soft: #3a2a1a;
+    --direct-fg: #57c6d6; --direct-bg: #123840; --indirect-fg: #e0b968; --indirect-bg: #362c17;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: clamp(28px, 5vw, 68px) clamp(18px, 4vw, 40px) 90px; }
+
+  /* ---- Hero ---- */
+  .hero { display: flex; flex-direction: column; gap: 20px; padding-bottom: 30px; border-bottom: 2px solid var(--line-strong); }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--accent); display: inline-block; }
+  h1 {
+    margin: 0; font-weight: 800; letter-spacing: -.02em; text-wrap: balance;
+    font-size: clamp(1.9rem, 4.6vw, 3.05rem); line-height: 1.08;
+  }
+  h1 .em { color: var(--accent); }
+  .lede { margin: 0; max-width: 62ch; color: var(--muted); font-size: clamp(1rem, 1.6vw, 1.12rem); }
+  .formula-strip {
+    font-family: var(--mono); font-size: clamp(.9rem, 1.7vw, 1.05rem);
+    color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 16px; box-shadow: var(--shadow);
+    display: inline-flex; flex-wrap: wrap; gap: 10px 14px; align-items: center;
+  }
+  .formula-strip .arrow { color: var(--accent); font-weight: 700; }
+  .formula-strip .tag { color: var(--faint); font-size: .82em; }
+
+  /* ---- Sections ---- */
+  section { margin-top: clamp(44px, 6vw, 68px); }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px; }
+  .sec-num {
+    font-family: var(--mono); font-size: .82rem; font-weight: 600; color: var(--accent);
+    padding-top: 4px; letter-spacing: .04em;
+  }
+  h2 { margin: 0; font-size: clamp(1.3rem, 2.8vw, 1.72rem); font-weight: 750; letter-spacing: -.01em; text-wrap: balance; }
+  .sec-sub { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
+
+  /* ---- Table shell ---- */
+  .table-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .93rem; min-width: 640px; }
+  thead th {
+    text-align: left; font-weight: 650; font-size: .76rem; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--muted); background: var(--panel-2);
+    padding: 13px 16px; border-bottom: 1.5px solid var(--line-strong); white-space: nowrap;
+  }
+  tbody td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--panel-2); }
+  td .num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .exo { color: var(--heat); font-weight: 600; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rowname { font-weight: 650; color: var(--ink); }
+  .rowname small { display: block; font-weight: 500; color: var(--faint); font-size: .8rem; font-family: var(--mono); }
+  .player { font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .player small { display: block; font-weight: 500; color: var(--faint); font-size: .78rem; white-space: normal; }
+
+  /* chemical formula inline */
+  .cf { font-family: var(--mono); white-space: nowrap; }
+
+  /* method chips */
+  .chip {
+    display: inline-block; font-size: .74rem; font-weight: 650; letter-spacing: .02em;
+    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .chip.direct { color: var(--direct-fg); background: var(--direct-bg); }
+  .chip.indirect { color: var(--indirect-fg); background: var(--indirect-bg); }
+
+  /* highlight the four required players */
+  tr.key td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+
+  /* ---- Comparison 2-col ---- */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .col-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .col-top { padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .col-top .kind { font-size: .74rem; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+  .col-top.d .kind { color: var(--direct-fg); }
+  .col-top.i .kind { color: var(--indirect-fg); }
+  .col-top h3 { margin: 4px 0 0; font-size: 1.14rem; font-weight: 750; }
+  .col-top p { margin: 6px 0 0; font-size: .88rem; color: var(--muted); }
+  dl.spec { margin: 0; padding: 8px 4px; }
+  dl.spec > div { display: grid; grid-template-columns: 40% 1fr; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--line); }
+  dl.spec > div:last-child { border-bottom: none; }
+  dl.spec dt { margin: 0; font-size: .8rem; color: var(--faint); font-weight: 600; }
+  dl.spec dd { margin: 0; font-size: .9rem; }
+
+  /* ---- Takeaways ---- */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
+  .card .icon { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-family: var(--mono); font-weight: 700; margin-bottom: 12px; }
+  .card h4 { margin: 0 0 6px; font-size: 1rem; font-weight: 700; }
+  .card p { margin: 0; font-size: .89rem; color: var(--muted); }
+
+  /* ---- Sources / footer ---- */
+  footer { margin-top: clamp(46px, 6vw, 70px); padding-top: 26px; border-top: 1px solid var(--line); }
+  footer h5 { margin: 0 0 12px; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+  .src { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .src li { font-size: .84rem; }
+  .src a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .src a:hover { border-bottom-color: var(--accent); }
+  .stamp { margin-top: 22px; font-size: .78rem; color: var(--faint); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 16px; font-size: .82rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .swatch { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+  .swatch.key { background: var(--accent); }
+
+  @media (max-width: 720px) {
+    .compare { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .sec-head { flex-direction: column; gap: 2px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    tbody tr td, .card { transition: background .15s ease; }
+  }
+  a:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Syngas → Dimethyl Ether · Technology Review</span>
+    <h1>合成ガスからの<span class="em">DME合成</span><br>技術総説とプロセス比較</h1>
+    <p class="lede">合成ガス（CO + H<sub>2</sub>）からジメチルエーテル（DME）を製造する二つのルート — 間接法（メタノール経由）と直接法（一段合成）— を整理し、JFE・KOGAS・Haldor&nbsp;Topsøe・Air&nbsp;Products を含む主要ライセンサーのプロセスを一覧化する。</p>
+    <div class="formula-strip">
+      <span>2&nbsp;CH<sub>3</sub>OH</span><span class="arrow">→</span><span>CH<sub>3</sub>OCH<sub>3</sub> + H<sub>2</sub>O</span>
+      <span class="tag">脱水 · ΔH = −23.4 kJ/mol</span>
+    </div>
+  </header>
+
+  <!-- ============ 1. Reactions ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <div>
+        <h2>基礎反応と熱化学</h2>
+        <p class="sec-sub">メタノール合成・脱水・水性ガスシフト（WGS）の三反応が、直接法では単一反応器内で並行進行する。</p>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:26%">反応</th>
+              <th style="width:34%">化学式</th>
+              <th style="width:18%">ΔH<sub>298</sub> (kJ/mol)</th>
+              <th>触媒</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rowname">① メタノール合成<small>methanol synthesis</small></td>
+              <td class="cf">CO + 2H<sub>2</sub> → CH<sub>3</sub>OH</td>
+              <td class="exo">−90.4</td>
+              <td>Cu-Zn-Al 系</td>
+            </tr>
+            <tr>
+              <td class="rowname">② メタノール脱水<small>dehydration</small></td>
+              <td class="cf">2CH<sub>3</sub>OH → CH<sub>3</sub>OCH<sub>3</sub> + H<sub>2</sub>O</td>
+              <td class="exo">−23.4</td>
+              <td>γ-Al<sub>2</sub>O<sub>3</sub> / HZSM-5（固体酸）</td>
+            </tr>
+            <tr>
+              <td class="rowname">③ 水性ガスシフト<small>water-gas shift</small></td>
+              <td class="cf">CO + H<sub>2</sub>O → CO<sub>2</sub> + H<sub>2</sub></td>
+              <td class="exo">−41.2</td>
+              <td>Cu 系（①触媒が兼務）</td>
+            </tr>
+            <tr>
+              <td class="rowname">直接合成・総括<small>①+②+③ (WGS内蔵)</small></td>
+              <td class="cf">3CO + 3H<sub>2</sub> → CH<sub>3</sub>OCH<sub>3</sub> + CO<sub>2</sub></td>
+              <td class="exo">−258.6</td>
+              <td>ハイブリッド（①+②混合）</td>
+            </tr>
+            <tr>
+              <td class="rowname">直接合成・総括<small>①+② (WGS無)</small></td>
+              <td class="cf">2CO + 4H<sub>2</sub> → CH<sub>3</sub>OCH<sub>3</sub> + H<sub>2</sub>O</td>
+              <td class="exo">−205.0</td>
+              <td>ハイブリッド</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. Two routes ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <div>
+        <h2>2つの製法ルート</h2>
+        <p class="sec-sub">間接法は既存メタノール技術の延長で低リスク、直接法はスラリー相の等温性で CO-rich ガスを高転化で処理する。</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="col-card">
+        <div class="col-top i">
+          <span class="kind">2-Step / Indirect</span>
+          <h3>間接法</h3>
+          <p>合成ガス → メタノール（別反応器）→ 脱水で DME</p>
+        </div>
+        <dl class="spec">
+          <div><dt>反応器</dt><dd>固定床（合成 + 脱水）</dd></div>
+          <div><dt>最適 H<sub>2</sub>/CO</dt><dd class="mono">≈ 2.0</dd></div>
+          <div><dt>パス転化率</dt><dd>メタノール平衡律速（70–85%/pass）</dd></div>
+          <div><dt>原料適合</dt><dd>天然ガス改質（H<sub>2</sub>-rich）</dd></div>
+          <div><dt>成熟度</dt><dd>商用実績豊富・低リスク</dd></div>
+        </dl>
+      </div>
+      <div class="col-card">
+        <div class="col-top d">
+          <span class="kind">1-Step / Direct (STD)</span>
+          <h3>直接法</h3>
+          <p>合成ガス → DME を単一反応器で一括変換</p>
+        </div>
+        <dl class="spec">
+          <div><dt>反応器</dt><dd>スラリー気泡塔 / 固定床（ハイブリッド触媒）</dd></div>
+          <div><dt>最適 H<sub>2</sub>/CO</dt><dd class="mono">≈ 1.0 – 2.0</dd></div>
+          <div><dt>パス転化率</dt><dd>生成物その場消費で平衡シフト（90%+）</dd></div>
+          <div><dt>原料適合</dt><dd>石炭・バイオマスガス化（CO-rich）</dd></div>
+          <div><dt>成熟度</dt><dd>実証段階中心・熱効率と大型化に優位</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. Players ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <div>
+        <h2>主要プレイヤー・ライセンサー</h2>
+        <p class="sec-sub">方式・反応器・触媒・合成ガス源・実証規模で横並び比較。</p>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch key"></span>指定4社（アクセント帯）</span>
+      <span><span class="chip direct" style="padding:1px 8px">直接法</span> 1-step</span>
+      <span><span class="chip indirect" style="padding:1px 8px">間接法</span> 2-step</span>
+    </div>
+    <div class="table-card">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:13%">プレイヤー</th>
+              <th style="width:9%">方式</th>
+              <th style="width:14%">反応器</th>
+              <th style="width:15%">触媒</th>
+              <th style="width:16%">合成ガス源 / H<sub>2</sub>/CO</th>
+              <th style="width:13%">実証・規模</th>
+              <th>特徴・成果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="key">
+              <td class="player">JFE<small>旧NKK · 日本</small></td>
+              <td><span class="chip direct">直接</span></td>
+              <td>スラリー気泡塔<br><span class="mono" style="font-size:.82em;color:var(--faint)">φ2.3 m × 22 m</span></td>
+              <td>ハイブリッド（合成+脱水を1スラリー化）</td>
+              <td>石炭・天然ガス / CO-rich（<span class="mono">≈1</span>, WGS内蔵）</td>
+              <td>釧路 <strong>100 t/日</strong> 実証（2003）<br><span style="color:var(--faint);font-size:.85em">累積約346日・約2万t</span></td>
+              <td>50 bar・260 ℃ で合成ガス転化率 <strong class="mono">96%</strong>・DME選択率 <strong class="mono">93%</strong>。スラリー相の高除熱で CO-rich ガスを直接利用。</td>
+            </tr>
+            <tr class="key">
+              <td class="player">KOGAS<small>韓国ガス公社</small></td>
+              <td><span class="chip direct">直接</span></td>
+              <td>単一反応器（自社ATR + DME合成）</td>
+              <td>ハイブリッド + 三重改質触媒 NiO-Mg/Ce-ZrO<sub>2</sub>/Al<sub>2</sub>O<sub>3</sub></td>
+              <td>天然ガス → 自社 Tri-Reformer / <span class="mono">1.2–1.5</span></td>
+              <td>仁川 <strong>10 t/日</strong> 実証<br><span style="color:var(--faint);font-size:.85em">2004着手〜2008完了</span></td>
+              <td>三重改質で低温・低コーキング・最適 H<sub>2</sub>/CO 比を実現。改質から DME まで自社一貫プロセス化。</td>
+            </tr>
+            <tr class="key">
+              <td class="player">Haldor Topsøe<small>デンマーク</small></td>
+              <td><span class="chip indirect">間接</span></td>
+              <td>固定床（断熱／管型 · 合成+脱水）</td>
+              <td>Cu系メタノール触媒 + 固体酸（γ-Al<sub>2</sub>O<sub>3</sub> / HZSM-5）</td>
+              <td>天然ガス改質 / <span class="mono">≈2</span></td>
+              <td>商用ライセンス<br><span style="color:var(--faint);font-size:.85em">Amocoと燃料DME開発</span></td>
+              <td>実績豊富な間接法。既存メタノール技術を活用し低リスク。1–30 bar・220–400 ℃、70–85%/pass。</td>
+            </tr>
+            <tr class="key">
+              <td class="player">Air Products<small>米 · DOE共同</small></td>
+              <td><span class="chip direct">直接</span></td>
+              <td>スラリー（三相・液相）反応器 <span class="mono" style="font-size:.82em">LPDME™</span></td>
+              <td>メタノール触媒 + 脱水触媒の物理混合</td>
+              <td>石炭由来合成ガス等 / 幅広い組成に対応</td>
+              <td>DOE PRDA（1989〜）<br><span style="color:var(--faint);font-size:.85em">LPMEOH™設備で検証</span></td>
+              <td>1986年着想。WGS+合成+脱水を同一反応器で並行進行させ平衡制約を打破、パス転化率を向上。DME とメタノールを併産。</td>
+            </tr>
+            <tr>
+              <td class="player">Lurgi<small>独 · 現 Air Liquide</small></td>
+              <td><span class="chip indirect">間接</span></td>
+              <td>固定床（MegaMethanol + 脱水）</td>
+              <td>Cu系 + 固体酸</td>
+              <td>天然ガス改質 / <span class="mono">≈2</span></td>
+              <td>商用ライセンス</td>
+              <td>大型メタノールプラント（MegaMethanol）に脱水工程を付加。</td>
+            </tr>
+            <tr>
+              <td class="player">Toyo Engineering<small>TEC · 日本</small></td>
+              <td><span class="chip indirect">間接</span></td>
+              <td>固定床</td>
+              <td>Cu系 + 固体酸</td>
+              <td>天然ガス改質</td>
+              <td>商用ライセンス（大型化対応）</td>
+              <td>メタノール経由の大規模 DME 生産を提供。</td>
+            </tr>
+            <tr>
+              <td class="player">Mitsubishi Gas Chemical<small>MGC · 日本</small></td>
+              <td><span class="chip indirect">間接</span></td>
+              <td>固定床</td>
+              <td>Cu系 + 固体酸</td>
+              <td>天然ガス改質</td>
+              <td>商用ライセンス</td>
+              <td>メタノール技術ベースの2ステップ法。</td>
+            </tr>
+            <tr>
+              <td class="player">China Energy<small>神華 · 中国</small></td>
+              <td><span class="chip indirect">間接</span></td>
+              <td><strong>流動床</strong>（脱水）</td>
+              <td>固体酸</td>
+              <td>石炭ガス化</td>
+              <td>商用（大規模）</td>
+              <td>他社が固定床脱水なのに対し流動床脱水を採用する点が特徴。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. Takeaways ============ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <div>
+        <h2>要点</h2>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">2</div>
+        <h4>間接法陣営は低リスク大型化</h4>
+        <p>Topsøe / Lurgi / TEC / MGC は既存メタノール技術の延長。H<sub>2</sub>-rich な天然ガス改質ガスが基本。</p>
+      </div>
+      <div class="card">
+        <div class="icon">1</div>
+        <h4>直接法陣営は熱効率で優位</h4>
+        <p>JFE / Air&nbsp;Products / KOGAS はスラリー相の等温性で CO-rich ガスを WGS 内蔵で直接処理。実証段階が中心。</p>
+      </div>
+      <div class="card">
+        <div class="icon">✦</div>
+        <h4>脱水はほぼ固定床</h4>
+        <p>China Energy（流動床）を除き、脱水工程は業界共通で固定床反応器を採用する。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <h5>Sources</h5>
+    <ul class="src">
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0167299107801650">Slurry phase DME direct synthesis technology — 100 tons/day demonstration plant (JFE, ScienceDirect)</a></li>
+      <li><a href="https://onepetro.org/ISOPEIOPEC/proceedings/ISOPE05/All-ISOPE05/ISOPE-I-05-008/9190">A New DME Production Technology: 100 t/day Demonstration Plant Project (JFE, OnePetro)</a></li>
+      <li><a href="https://koreascience.or.kr/article/JAKO201233356078989.page">Optimization of KOGAS DME Process From Demonstration Long-Term Test (Korea Science)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0920586108002459">Optimal design and operation of a natural gas tri-reforming reactor for DME synthesis (KOGAS, ScienceDirect)</a></li>
+      <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0255270114001263">Dimethyl ether: A review of technologies and production challenges (ScienceDirect)</a></li>
+      <li><a href="https://www.osti.gov/biblio/10170276">Synthesis of DME and Alternative Fuels in the Liquid Phase from Coal-Derived Syngas — LPDME (Air Products / DOE, OSTI)</a></li>
+      <li><a href="https://www.researchgate.net/publication/328142186">The Direct DME Synthesis Process from Syngas: LPDME Process Feasibility (ResearchGate)</a></li>
+    </ul>
+    <p class="stamp">熱化学データは代表値（文献により若干の差異あり）。転化率・選択率・運転条件は各社実証報告に基づく。</p>
+  </footer>
+
+</div>

@@ -1,0 +1,223 @@
+<title>DME合成 総説レビュー・マトリクス</title>
+<style>
+  :root {
+    --bg: #eef1f4;
+    --panel: #ffffff;
+    --panel-2: #f5f7f9;
+    --ink: #141a21;
+    --muted: #5b6773;
+    --faint: #8894a1;
+    --line: #dbe1e7;
+    --line-strong: #c3ccd4;
+    --accent: #0e7d8f;
+    --accent-soft: #d3ebef;
+    --heat: #b5652a;
+    --lvl3: #0e7d8f;   /* ◎ */
+    --lvl2: #6c98a2;   /* ○ */
+    --lvl1: #b3bfc7;   /* △ */
+    --shadow: 0 1px 2px rgba(20,26,33,.05), 0 8px 24px rgba(20,26,33,.06);
+    --sans: "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+    --mono: "SFMono-Regular", "JetBrains Mono", Consolas, "Roboto Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1319; --panel: #171e26; --panel-2: #1c242d; --ink: #e7edf2;
+      --muted: #9aa7b3; --faint: #6f7d8a; --line: #29333d; --line-strong: #38444f;
+      --accent: #3fbecf; --accent-soft: #123840; --heat: #dd9459;
+      --lvl3: #3fbecf; --lvl2: #6f939c; --lvl1: #48555f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #eef1f4; --panel: #ffffff; --panel-2: #f5f7f9; --ink: #141a21;
+    --muted: #5b6773; --faint: #8894a1; --line: #dbe1e7; --line-strong: #c3ccd4;
+    --accent: #0e7d8f; --accent-soft: #d3ebef; --heat: #b5652a;
+    --lvl3: #0e7d8f; --lvl2: #6c98a2; --lvl1: #b3bfc7;
+    --shadow: 0 1px 2px rgba(20,26,33,.05), 0 8px 24px rgba(20,26,33,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1319; --panel: #171e26; --panel-2: #1c242d; --ink: #e7edf2;
+    --muted: #9aa7b3; --faint: #6f7d8a; --line: #29333d; --line-strong: #38444f;
+    --accent: #3fbecf; --accent-soft: #123840; --heat: #dd9459;
+    --lvl3: #3fbecf; --lvl2: #6f939c; --lvl1: #48555f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(16px, 4vw, 40px) 90px; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--accent); display: inline-block; }
+  h1 { margin: 16px 0 0; font-weight: 800; letter-spacing: -.02em; text-wrap: balance; font-size: clamp(1.8rem, 4.4vw, 2.85rem); line-height: 1.09; }
+  h1 .em { color: var(--accent); }
+  .lede { margin: 16px 0 0; max-width: 64ch; color: var(--muted); font-size: clamp(1rem, 1.6vw, 1.1rem); }
+  header { padding-bottom: 26px; border-bottom: 2px solid var(--line-strong); }
+
+  /* legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px 22px; margin: 26px 0 18px; font-size: .85rem; color: var(--muted); align-items: center; }
+  .legend .grp { display: inline-flex; align-items: center; gap: 8px; }
+  .mk { font-family: var(--mono); font-size: 1.05rem; line-height: 1; font-weight: 700; width: 1.2em; text-align: center; }
+  .mk.l3 { color: var(--lvl3); }
+  .mk.l2 { color: var(--lvl2); }
+  .mk.l1 { color: var(--lvl1); }
+
+  /* table */
+  .table-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 760px; }
+  thead th { text-align: left; font-weight: 650; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: var(--panel-2); padding: 13px 14px; border-bottom: 1.5px solid var(--line-strong); white-space: nowrap; vertical-align: bottom; }
+  thead th.co { text-align: center; width: 74px; }
+  tbody td { padding: 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--panel-2); }
+  td.co { text-align: center; font-family: var(--mono); font-size: 1.15rem; font-weight: 700; }
+  td.co.l3 { color: var(--lvl3); }
+  td.co.l2 { color: var(--lvl2); }
+  td.co.l1 { color: var(--lvl1); }
+
+  .paper { font-weight: 700; color: var(--ink); font-size: .97rem; }
+  .paper a { color: var(--ink); text-decoration: none; border-bottom: 1.5px solid var(--accent); }
+  .paper a:hover { color: var(--accent); }
+  .meta { display: block; margin-top: 3px; font-size: .78rem; color: var(--faint); font-weight: 500; }
+  .meta .doi { font-family: var(--mono); }
+  .note { color: var(--muted); font-size: .88rem; }
+  .note .badge { display: inline-block; font-size: .74rem; font-weight: 650; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; margin-bottom: 5px; }
+
+  .colgroup-head th.spanco { text-align: center; color: var(--accent); border-bottom: none; padding-bottom: 4px; font-size: .68rem; }
+
+  footer { margin-top: 30px; font-size: .82rem; color: var(--faint); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) { tbody tr td { transition: background .15s ease; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Literature Matrix · Syngas → DME</span>
+    <h1>合成ガスからの<span class="em">DME合成</span>：<br>主要総説と企業比較の所在</h1>
+    <p class="lede">DME直接／間接合成を扱う8件のレビュー論文について、<strong>JFE・KOGAS・Air&nbsp;Products・Haldor&nbsp;Topsøe</strong> の各社プロセスがどの程度取り上げられているかを整理し、原著へのリンクを付した。各セルは記載の詳しさを示す。</p>
+
+    <div class="legend">
+      <span class="grp"><span class="mk l3">◎</span> 詳述（表・比較あり）</span>
+      <span class="grp"><span class="mk l2">○</span> 本文で言及</span>
+      <span class="grp"><span class="mk l1">△</span> 簡略・限定的</span>
+    </div>
+  </header>
+
+  <div class="table-card">
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr class="colgroup-head">
+            <th rowspan="2">総説（原著リンク）</th>
+            <th colspan="4" class="spanco">4社の取り上げ度</th>
+            <th rowspan="2">企業比較の場所・特徴</th>
+          </tr>
+          <tr>
+            <th class="co">JFE</th>
+            <th class="co">KOGAS</th>
+            <th class="co">Air&nbsp;Products</th>
+            <th class="co">Haldor&nbsp;Topsøe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.1039/D0EE01187H">Dieterich et&nbsp;al. 2020</a>
+              <span class="meta">Power-to-liquid via synthesis of methanol, DME or Fischer–Tropsch-fuels: a review · <em>Energy Environ. Sci.</em> 13(10), 3207–3252 · <span class="doi">10.1039/D0EE01187H</span></span>
+            </td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="note"><span class="badge">Table 15</span><br>Overview of direct DME synthesis technologies として4社を一覧表化。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.1134/S0965544121020109">Afokin &amp; Magomedova 2021</a>
+              <span class="meta">Process Solutions for Recovery of DME Produced Through One-Step Synthesis · <em>Petroleum Chemistry</em> 61(2), 115–122 · <span class="doi">10.1134/S0965544121020109</span></span>
+            </td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="note">各社の one-step process を本文・フロー図で比較し、DME回収法まで整理。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.1016/j.cej.2023.147494">Peinado et&nbsp;al. 2024</a>
+              <span class="meta">Review and perspective: Next generation DME synthesis technologies for the energy transition · <em>Chem. Eng. J.</em> 479, 147494 · <span class="doi">10.1016/j.cej.2023.147494</span></span>
+            </td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="note">従来の direct DME process と分離強化技術（SEDMES等）を整理。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.1021/cs500967j">Sun et&nbsp;al. 2014</a>
+              <span class="meta">Catalysis Chemistry of Dimethyl Ether Synthesis · <em>ACS Catal.</em> 4(10), 3346–3356 · <span class="doi">10.1021/cs500967j</span></span>
+            </td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="note">4社を本文で明示。KOGAS process を特に詳述。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://www.sciencedirect.com/science/article/abs/pii/S0255270114001263">Azizi et&nbsp;al. 2014</a>
+              <span class="meta">Dimethyl ether: A review of technologies and production challenges · <em>Chem. Eng. Process.</em> 82, 150–172 · <span class="doi">10.1016/j.cep.2014.06.007</span></span>
+            </td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="note">DME製造技術・企業技術を広く整理（間接／直接の両ルート）。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.1134/S0965544117070040">Khadzhiev et&nbsp;al. 2017</a>
+              <span class="meta">Catalysis in the dispersed phase: Slurry technology in the synthesis of DME (Review) · <em>Petroleum Chemistry</em> 57(7), 553–570 · <span class="doi">10.1134/S0965544117070040</span></span>
+            </td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="co l3" title="詳述">◎</td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="note">slurry technology 中心（JFE・Air Products のスラリー相を詳述）。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://synsint.com/index.php/synsint/article/view/29">Akhoondi et&nbsp;al. 2021</a>
+              <span class="meta">Direct catalytic production of dimethyl ether from CO and CO₂: A review · <em>Synthesis and Sintering</em> 1(2), 105–120</span>
+            </td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="co l1" title="簡略・限定的">△</td>
+            <td class="note">触媒・反応条件中心。企業プロセスは限定的に触れる程度。</td>
+          </tr>
+          <tr>
+            <td class="paper">
+              <a href="https://doi.org/10.4155/bfs.09.16">Takeishi 2010</a>
+              <span class="meta">Dimethyl ether and catalyst development for production from syngas · <em>Biofuels</em> 1(1), 217–226 · <span class="doi">10.4155/bfs.09.16</span></span>
+            </td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="co l2" title="本文で言及">○</td>
+            <td class="note">syngas direct DME の技術史・触媒開発を通観。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    リンクは原著の DOI（一部は出版社ページ）を指す。取り上げ度（◎/○/△）は元の比較表に基づく評価であり、本文精読による再検証の余地がある。書誌情報は各出版社ページで確認済み。
+  </footer>
+</div>
